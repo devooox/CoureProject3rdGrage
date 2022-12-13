@@ -4,7 +4,7 @@
 #include <vector>
 
 
-class View {
+class TMatrixView {
  public:
   int* M;
   bool type;
@@ -30,7 +30,7 @@ class View {
   }
 };
 
-int* viewMultiplication(View& A, View& B, int n, int m, int l) {
+int* viewMultiplication(TMatrixView& A, TMatrixView& B, int n, int m, int l) {
   int* C = new int[n*l];
   for (int i = 0; i < n*l; ++i) {
     C[i] = 0;
@@ -64,7 +64,7 @@ int* matrixMultiplication(const int* A, const int* B, int n, int m, int l) {
 
 
 
-int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border = 0) {
+int* blockMatrixMultiplication(TMatrixView& A, TMatrixView& B, int n, int m, int l, int border = 0) {
   int* C;
   if (m > border && border > 1) {
     C = new int[n*l];
@@ -72,7 +72,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     int newN = n/2;
     int newL = l/2;
     //BLOCK SPLIT
-    View A11;
+    TMatrixView A11;
     A11.M = A.M;
     A11.i = A.i;
     A11.j = A.j;
@@ -82,7 +82,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     A11.n = A.n;
     A11.m = A.m;
 
-    View A21;
+    TMatrixView A21;
     A21.M = A.M;
     A21.i = A.i + A.colLength/2;
     A21.j = A.j;
@@ -92,7 +92,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     A21.n = A.n;
     A21.m = A.m;
 
-    View A12;
+    TMatrixView A12;
     A12.M = A.M;
     A12.i = A.i;
     A12.j = A.j + A.rowLength/2;
@@ -102,7 +102,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     A12.n = A.n;
     A12.m = A.m;
 
-    View A22;
+    TMatrixView A22;
     A22.M = A.M;
     A22.i = A.i + A.rowLength/2;
     A22.j = A.j + A.colLength/2;
@@ -113,7 +113,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     A22.m = A.m;
 
 
-    View B11;
+    TMatrixView B11;
     B11.M = B.M;
     B11.i = B.i;
     B11.j = B.j;
@@ -123,7 +123,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     B11.n = B.n;
     B11.m = B.m;
 
-    View B12;
+    TMatrixView B12;
     B12.M = B.M;
     B12.i = B.i;
     B12.j = B.j + B.rowLength/2;
@@ -133,7 +133,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     B12.n = B.n;
     B12.m = B.m;
 
-    View B21;
+    TMatrixView B21;
     B21.M = B.M;
     B21.i = B.i + B.colLength/2;
     B21.j = B.j;
@@ -143,7 +143,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
     B21.n = B.n;
     B21.m = B.m;
 
-    View B22;
+    TMatrixView B22;
     B22.M = B.M;
     B22.i = B.i + B.colLength/2;
     B22.j = B.j + B.rowLength/2;
@@ -207,7 +207,7 @@ int* blockMatrixMultiplication(View& A, View& B, int n, int m, int l, int border
 
 
 int* blockMatrixMultiplicationPrepare(int *A, int *B, int n, int m, int l, int border = 0) {
-  View a;
+  TMatrixView a;
   a.M = A;
   a.i = 0;
   a.j = 0;
@@ -216,7 +216,7 @@ int* blockMatrixMultiplicationPrepare(int *A, int *B, int n, int m, int l, int b
   a.type = 0;
   a.n = n;
   a.m = m;
-  View b;
+  TMatrixView b;
   b.M = B;
   b.i = 0;
   b.j = 0;
@@ -231,7 +231,7 @@ int* blockMatrixMultiplicationPrepare(int *A, int *B, int n, int m, int l, int b
 
 
 
-int* shtrassenMatrixMultiplication(View& A, View& B, int size, int border = 0) {
+int* shtrassenMatrixMultiplication(TMatrixView& A, TMatrixView& B, int size, int border = 0) {
 
   int* C;
   if (size > border && border > 1) {
@@ -242,7 +242,7 @@ int* shtrassenMatrixMultiplication(View& A, View& B, int size, int border = 0) {
     int* H2;
     int* V1;
     int* V2;
-    View tmpMatrix1;
+    TMatrixView tmpMatrix1;
     tmpMatrix1.type = 0;
     tmpMatrix1.rowLength = A.rowLength/2;
     tmpMatrix1.colLength = A.colLength/2;
@@ -251,7 +251,7 @@ int* shtrassenMatrixMultiplication(View& A, View& B, int size, int border = 0) {
     tmpMatrix1.n = A.rowLength/2;
     tmpMatrix1.m = A.colLength/2;
     tmpMatrix1.M = new int[tmpMatrix1.n*tmpMatrix1.m];
-    View tmpMatrix2;
+    TMatrixView tmpMatrix2;
     tmpMatrix2.type = 1;
     tmpMatrix2.rowLength = B.rowLength/2;
     tmpMatrix2.colLength = B.colLength/2;
@@ -361,7 +361,7 @@ int* shtrassenPrepare(int* A, int* B, int n, int m, int l, int border = 0) {
     }
   }
 
-  View a;
+  TMatrixView a;
   a.M = newA;
   a.i = 0;
   a.j = 0;
@@ -370,7 +370,7 @@ int* shtrassenPrepare(int* A, int* B, int n, int m, int l, int border = 0) {
   a.type = 0;
   a.n = twoPower;
   a.m = twoPower;
-  View b;
+  TMatrixView b;
   b.M = newB;
   b.i = 0;
   b.j = 0;
@@ -411,7 +411,7 @@ int main() {
       fin >> B[i + j * m];
     }
   }
-  View a;
+  TMatrixView a;
   a.rowLength = n;
   a.colLength = m;
   a.i = 0;
@@ -421,7 +421,7 @@ int main() {
   a.type = false;
   a.M = A;
 
-  View b;
+  TMatrixView b;
   b.rowLength = m;
   b.colLength = l;
   b.i = 0;
